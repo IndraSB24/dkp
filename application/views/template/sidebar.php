@@ -22,7 +22,7 @@
             <li <?= $this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == '' ? 'class="active"' : "" ?>>
                 <a class="nav-link" href="<?= base_url() ?>dashboard">
                     <i class="fas fa-fire"></i>
-                    <span>Dashboard</span>
+                    <span>Dashboard New</span>
                 </a>
             </li>
             
