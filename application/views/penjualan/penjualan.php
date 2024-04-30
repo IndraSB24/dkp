@@ -86,6 +86,20 @@
                     </tbody>
                 </table>
                 <a class="btn btn-primary btn-lg text-light font-weight-bolder" href="<?= base_url()  ?>keuangan/penjualanToPdf">PDF FILE</a>
+                
+                <table class="table table-bordered table-light shadow-sm p-3 mb-5 bg-white rounded dt-responsive nowrap" id="tabel-show" width="100%">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Nama Produk</th>
+                            <th scope="col" width="5%" class="text-center">Unit</th>
+                            <th scope="col" width="18%" class="text-center">Keuntungan (Rp)</th>
+                            <th scope="col" width="15%" class="text-center">Tanggal Terjual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>

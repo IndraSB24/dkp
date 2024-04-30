@@ -53,22 +53,25 @@ $(document).ready(function() {
      "columnDefs": [{
         "searchable": false,
         "orderable": false,
-        "targets": 1
+        "targets": 1 
       }]
     });
+    
 
-//   Tabel Produk
+//   Tabel Data Master
     $('#tabel-produk').DataTable({
       responsive: true,
       "lengthMenu": [
-      [5, 10, 25, 50],
-      [5, 10, 25, 50]
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, 'All']
     ],
      "columnDefs": [{
         "searchable": false,
         "orderable": false,
         "targets": 5,
-      }]
+      }],
+      dom: '<lBf<t>ip>',
+      buttons: true
     });
     //   Tabel Produk
     $('#tabel-keuangan').DataTable({
@@ -77,6 +80,56 @@ $(document).ready(function() {
       [5, 10, 25, 50],
       [5, 10, 25, 50]
     ]
+    });
+    //   Tabel stok
+    $('#tabel-stok').DataTable({
+      scrollX: true,
+      autoWidth: false,
+      "lengthMenu": [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, 'All']
+    ],
+     "columnDefs": [{
+        "searchable": false,
+        "orderable": false,
+        "targets": 0,
+      }],
+      dom: '<lBf<t>ip>',
+      buttons: true
+    });
+    
+    //   Tabel Transaksi
+    $('#tabel-transaksi').DataTable({
+      responsive: true,
+      "lengthMenu": [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, 'All']
+    ],
+     "columnDefs": [{
+        "searchable": false,
+        "orderable": false,
+        "targets": 5,
+      }],
+      dom: '<"row"<"col-sm-3"l><"col-sm-6"><"col-sm-3"<"breadcumb bg-white float-right"B>>>tr<"bottom"<"row"<"col-sm-6"i><"col-sm-6"p>>><"clear">',
+      buttons: true
+    });
+    
+    $('#tabel-khusus').DataTable({
+      responsive: true,
+    //   scrollX: true
+    });
+    $('#tabel-tambah').DataTable({
+      responsive: true,
+    //   scrollX: true
+    });
+    
+    // Tabel All Row
+    $('#tabel-all-row').DataTable({
+        responsive: true,
+        "lengthMenu": [
+            [-1],
+            ['All']
+        ]
     });
 
     

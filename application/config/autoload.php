@@ -58,7 +58,8 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('email', 'session', 'database', 'form_validation');
+$autoload['libraries'] = array('email', 'session', 'database', 'form_validation', 'encryption');
+$autoload['libraries'] = array('database', 'session', 'form_validation', 'excel');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +90,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'file');
+$autoload['helper'] = array('url', 'form', 'file', 'datetime_helper', 'session_helper', 'number_helper');
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +133,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('Model_Produk', 'Model_Keuangan', 'Model_Auth', 'Model_Profil');
+$autoload['model'] = array('Model_Produk', 'Model_Auth', 'Model_Profil', 'Model_satuan_ukuran', 'Model_gudang', 'Model_produk_formula', 'Model_harga_jual', 'Model_kpi_barang_rusak', 'Model_transaksi_penjualan', 'Model_stok_gudang');

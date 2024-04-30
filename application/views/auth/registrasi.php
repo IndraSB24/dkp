@@ -8,15 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link href='<?= base_url(); ?>/assets/img/icon/favicon.ico' rel='shortcut icon'>
-    <title>REGISTRASI Buku Usaha</title>
+    <link href='<?= base_url(); ?>/assets/img/storypie.png' rel='shortcut icon'>
+    <title>Registrasi StoryPie</title>
 
     <!-- Custom fonts for this template-->
     <!-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="<?= base_url() ?>assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?= base_url() ?>assets/css/sb-admin-2.css" rel="stylesheet">
 
 </head>
 
@@ -33,16 +33,26 @@
                     <div class="card-body p-0">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">REGISTRASI BUKU USAHA</h1>
+                                <h1 class="h4 text-gray-900 mb-4">REGISTRASI STORYPIE</h1>
                             </div>
-                            <form class="user" method="POST" action="<?= base_url() ?>auth/registrasi">
+                            <form class="user" method="POST" action="<?= base_url('auth/registrasi') ?>">
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" id="username" placeholder="Username" name="username" autocomplete="off" value="<?= set_value('username');  ?>">
                                     <?= form_error('username', '<small class="form-text text-danger pl-3">', '</small>') ?>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="namaUsaha" placeholder="Nama Usaha" name="namaUsaha" autocomplete="off" value="<?= set_value('namaUsaha');  ?>">
-                                    <?= form_error('namaUsaha', '<small class="form-text text-danger pl-3">', '</small>') ?>
+                                    <input type="text" class="form-control form-control-user" id="nama" placeholder="Nama Karyawan" name="nama" autocomplete="off" value="<?= set_value('namaUsaha');  ?>">
+                                    <?= form_error('nama', '<small class="form-text text-danger pl-3">', '</small>') ?>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" id="user_role" name="user_role" style="border-radius:20px" size="1">
+                                        <option value="0" selected>PILIH USER ROLE</option>
+                                        <?php
+                                            foreach($list_role as $row){
+                                                echo '<option value="'.$row['id'].'">'.$row['deskripsi'].'</option>';
+                                            }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -68,9 +78,7 @@
 
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     </div>

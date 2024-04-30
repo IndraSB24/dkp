@@ -3,149 +3,268 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Produk extends CI_Model
 {
-    // Produk
-    public function hitung_produk()
+    
+    function tabel(){
+        $tabel = "produk";
+        return $tabel;
+    }
+    
+    // Ambil Data
+    public function get_all()
     {
-        return $this->db->get('produk')->num_rows();
+        return $this->db->get($this->tabel())->result_array();
+    }
+    
+    // get data by where
+    public function get_where($column, $value)
+    {
+        $column = $this->db->escape_str($column);
+        $value = $this->db->escape_str($value);
+        
+        $this->db->select('
+            p.*,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+        ')
+        ->from('produk p')
+        ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+        ->join('satuan_ukuran su', 'su.id=p.id_satuan_dasar')
+        ->where($column, $value);
+        return $this->db->get()->result_array();
+    }
+    
+    // get for import
+    public function get_for_import($column, $value)
+    {
+        $column = $this->db->escape_str($column);
+        $value = $this->db->escape_str($value);
+    
+        $this->db->where($column, $value);
+        return $this->db->get('produk')->result_array();
+    }
+    
+    // Ambil Data untuk export
+    public function get_for_export()
+    {
+        $this->db->select('
+            p.nama,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+        ')
+        ->from('produk p')
+        ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+        ->join('satuan_ukuran su', 'su.id=p.id_satuan_dasar') 
+        ->order_by('p.nama', 'ASC');
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
+
+            // Add a header row for the 'Produk' sheet
+            $header = array('Nama Produk', 'Kategori Produk', 'Satuan Produk');
+            array_unshift($result, $header);
+
+            return $result;
+        }
+
+        return array();
+    }
+    
+    // Ambil Bahan Baku
+    function get_all_sorted()
+    {
+        $this->db->select('
+            p.*,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+        ')
+        ->from('produk p')
+        ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+        ->join('satuan_ukuran su', 'su.id=p.id_satuan_dasar') 
+        ->order_by('p.id_kelompok_produk', 'ASC');
+        return $this->db->get()->result_array();
+    }
+    
+    // Ambil Bahan Baku
+    function get_all_no_array()
+    {
+        $this->db->select('
+            p.*,
+            p.nama as nama_produk,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+        ')
+        ->from('produk p')
+        ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+        ->join('satuan_ukuran su', 'su.id=p.id_satuan_dasar') 
+        ->order_by('p.id_kelompok_produk', 'ASC');
+        return $this->db->get()->result();
+    }
+    
+    // Ambil Data by Id
+    public function get_all_id($id)
+    {
+        return $this->db->get_where('produk tb', array('tb.id' => $id))->result();
+    }
+    
+    // Ambil data by id
+    function getById($id)
+    {
+        $this->db->select('
+                            *
+                        ')
+            ->from('produk p')
+            ->where('p.id ', $id);
+        return $this->db->get()->result();
+    }
+    
+    // Ambil data untuk formula
+    function getProdukWithFormula()
+    {
+        $this->db->select('
+                            p.*,
+                            su.nama_satuan as satuan_dasar,
+                            pfl.id as id_formula
+                        ')
+            ->from('produk p')
+            ->join('satuan_ukuran su', 'p.id_satuan_dasar=su.id')
+            ->join('produk_formula_list pfl', 'p.id=pfl.id_produk')
+            ->order_by('p.nama', 'ASC');
+        return $this->db->get()->result_array();
+    }
+    
+    // Ambil Bahan Baku
+    function getBB()
+    {
+        $this->db->select('
+            p.*,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+       ')
+       ->from('produk p')
+       ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+       ->join('satuan_ukuran su', 'p.id_satuan_dasar=su.id')
+        ->where('p.id_kelompok_produk = 1 or p.id_kelompok_produk = 2')
+        ->order_by('p.nama', 'ASC');
+        return $this->db->get()->result_array();
+    }
+    
+    // Ambil not Bahan Baku
+    function getNotBB()
+    {
+        $this->db->select('
+            p.*,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+        ')
+        ->from('produk p')
+        ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+        ->join('satuan_ukuran su', 'p.id_satuan_dasar=su.id')
+        ->where('p.id_kelompok_produk != 1 and p.id_kelompok_produk != 2')
+        ->order_by('p.nama', 'ASC');
+        return $this->db->get()->result_array();
+    }
+    
+    public function get_with_kel_produk(){
+       $this->db->select('
+            p.*,
+            kp.nama as kelompok_produk,
+            su.nama_satuan as satuan_dasar
+       ')
+       ->from('produk p')
+       ->join('kelompok_produk kp', 'p.id_kelompok_produk=kp.id')
+       ->join('satuan_ukuran su', 'p.id_satuan_dasar=su.id');
+       return $this->db->get()->result_array();
     }
 
-    // Ambil Data Kategori Produk
-    public function get_produk($user_id)
+    // Tambah
+    public function tambah($user_id)
     {
-        return $this->db->get_where('produk', ['user_id' => $user_id])->result_array();
-    }
-
-    public function data_kategori($user_id)
-    {
-        return $this->db->get_where('kategori', ['user_id' => $user_id])->result_array();
-    }
-
-    // Tambah Produk
-    public function tambah_produk($user_id)
-    {
-        $jual = $this->input->post('harga_jual');
-        $harga_jual = str_replace(".", "", $jual);
-        $beli = $this->input->post('harga_beli');
-        $harga_beli = str_replace(".", "", $beli);
-        $data['kategori'] = $this->db->get_where('kategori', ['id_kategori' => $this->input->post('kategori')])->row_array();
-        $kategori_name = $data['kategori']['nama_kategori'];
+        $id_kelompok_produk = $this->input->post('kelompok');
+        $kode       = $this->input->post('kode');
+        $nama       = $this->input->post('nama');
+        $id_sat_das = $this->input->post('satuan_dasar');
+        
         $data = [
-            'nama_produk' => htmlspecialchars(ucwords($this->input->post('nama'))),
-            'hrg_beli' => $harga_beli,
-            'hrg_jual' => $harga_jual,
-            'kategori_name' => $kategori_name,
-            'user_id' => $user_id,
-            'stock' => 0
+            'id_kelompok_produk'=> $id_kelompok_produk,
+            'kode'              => $kode,
+            'nama'              => strtoupper($nama),
+            'id_satuan_dasar'   => $id_sat_das,
+            'created_by'        => activeId()
         ];
 
-        $this->db->insert('produk', $data);
+        $this->db->insert($this->tabel(), $data);
     }
-
-    public function tambah_stock($user_id)
+    
+    // Hapus
+    public function hapus($id)
     {
-        $id_produk = $this->input->post('id_produk');
-        $add_stock = $this->input->post('stock');
-        // Tambah Stock
-        $data_produk['produk'] = $this->db->get_where('produk', ['id_produk' => $id_produk])->row_array();
-        $stock_now = $data_produk['produk']['stock'];
-        $jumlah_stock = $stock_now + $add_stock;
-        var_dump($jumlah_stock);
-
+        $this->db->where('id', $id);
+        $this->db->delete($this->tabel());
+    }
+    
+     // Update
+    public function update($user_id)
+    {
+        $id_edit    = $this->input->post('id_edit');
+        $id_kelompok_produk = $this->input->post('kelompok_edit');
+        $kode       = $this->input->post('kode_edit');
+        $nama       = $this->input->post('nama_edit');
+        $id_sat_das = $this->input->post('satuan_dasar_edit');
+        
         $data = [
-            'stock' => $jumlah_stock
+            'id_kelompok_produk'=> $id_kelompok_produk,
+            'kode'              => $kode,
+            'nama'              => strtoupper($nama),
+            'id_satuan_dasar'   => $id_sat_das,
+            'created_by'        => activeId()
         ];
-
-        $this->db->where('id_produk', $id_produk);
-        $this->db->update('produk', $data);
-
-        // Beli Barang
-        $hrg_beli = $data_produk['produk']['hrg_beli'];
-        $produk_name = $data_produk['produk']['nama_produk'];
-        $data_beli = [
-            'produk_name' => $produk_name,
-            'user_id' => $user_id,
-            'unit' => $add_stock,
-            'total_beli' => ($hrg_beli * $add_stock),
-            'tanggal_beli' => date('Y-m-d')
-        ];
-
-        $this->db->insert('pembelian', $data_beli);
+        
+        $this->db->where('id', $id_edit);
+        $this->db->update($this->tabel(), $data);
     }
-
-    // Hapus Produk
-
-    public function hapus_produk($id_produk)
-    {
-        $this->db->where('id_produk', $id_produk);
-        $this->db->delete('produk');
+    
+    // update stock
+    public function update_stock($kode="", $id_produk, $jumlah){
+        $data = ['stok_in' => $jumlah];
+        
+        $this->db->where('id', $id_produk);
+        $this->db->update($this->tabel(), $data);
     }
-
-    // Update Produk
-    public function ambil_produk($id_produk)
-    {
-        $query = "SELECT * FROM produk WHERE id_produk = $id_produk";
-        return $this->db->query($query)->row_array();
+    
+    public function update_stock_out($id_produk, $jumlah){
+        $data = ['stok_out' => $jumlah];
+        $this->db->where('id', $id_produk);
+        $this->db->update($this->tabel(), $data);
     }
-
-    public function ambil_kat_produk($id_produk, $user_id)
-    {
-        $data['produk'] = $this->db->get_where('produk', ['id_produk' => $id_produk])->row_array();
-        $kategori_name = $data['produk']['kategori_name'];
-        $query = "SELECT * FROM kategori WHERE user_id = $user_id && nama_kategori != '$kategori_name'";
-        return $this->db->query($query)->result_array();
-    }
-
-
-    public function update_produk($id_produk)
-    {
-        $jual = $this->input->post('harga_jual');
-        $harga_jual = str_replace(".", "", $jual);
-        $beli = $this->input->post('harga_beli');
-        $harga_beli = str_replace(".", "", $beli);
+    
+    public function update_stock_all($id_produk){
+        $ambil_stok_in  = $this->Model_gudang->get_transaksi_in_by_produk($id_produk);
+        foreach($ambil_stok_in as $asi){
+            $stok_in += $asi->jumlah;
+        }
+        $ambil_stok_out  = $this->Model_gudang->get_transaksi_out_by_produk($id_produk);
+        foreach($ambil_stok_out as $aso){
+            $stok_out += $aso->jumlah;
+        }
         $data = [
-            'nama_produk' => htmlspecialchars(ucwords($this->input->post('nama'))),
-            'hrg_beli' => $harga_beli,
-            'hrg_jual' => $harga_jual,
-            'kategori_name' => $this->input->post('kategori')
+            'stok_in'  => $stok_in,
+            'stok_out' => $stok_out
         ];
-
-        $this->db->where('id_produk', $id_produk);
-        $this->db->update('produk', $data);
+        $this->db->where('id', $id_produk);
+        $this->db->update($this->tabel(), $data);
     }
-    // Bagian Kategori
-
-    // Ambil Data Kategori Produk
-    public function get_kategori($user_id)
-    {
-        return $this->db->get_where('kategori', ['user_id' => $user_id])->result_array();
+    
+    // update harga satuan
+    public function update_harga_satuan($id_produk, $harga){
+        $data['harga_satuan'] = $harga;
+        
+        $this->db->where('id', $id_produk);
+        $this->db->update($this->tabel(), $data);
     }
-
-    // Tambah Kategori Produk
-    public function tambah_kategori($user_id)
-    {
-        $data = [
-            'user_id' => $user_id,
-            'nama_kategori' => htmlspecialchars(ucwords($this->input->post('nama_kat')))
-        ];
-
-        $this->db->insert('kategori', $data);
-    }
-
-    // Hapus Kategori Produk
-
-    public function hapus_kategori($id_kategori)
-    {
-        $this->db->where('id_kategori', $id_kategori);
-        $this->db->delete('kategori');
-    }
-
-    public function update_kategori($id_kategori)
-    {
-        $data = [
-            'nama_kategori' => htmlspecialchars(ucwords($this->input->post('nama_kat')))
-        ];
-
-        $this->db->where('id_kategori', $id_kategori);
-        $this->db->update('kategori', $data);
-    }
+    
+    
+    
+    
 }
